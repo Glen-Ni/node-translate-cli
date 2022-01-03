@@ -1,0 +1,17 @@
+{
+  "name": "node-translate-cli",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev ./src/cli.ts"
+  },
+  "dependencies": {
+    "commander": "^8.3.0",
+    "md5": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/md5": "^2.3.1",
+    "@types/node": "^17.0.6"
+  }
+}
