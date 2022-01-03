@@ -3,13 +3,24 @@ import * as md5 from "md5";
 import * as https from "https";
 import {appid, secret} from "../privacy";
 
+type BaiduResult = {
+  error_code?: string;
+  error_msg?: string;
+  from: string;
+  to: string;
+  trans_result: {
+    src: string;
+    dst: string;
+  }[]
+}
+
 export const translate = (words) => {
   const salt = Math.round(Math.random() * 100);
 
   const query = querystring.stringify({
     q: words,
     from: 'en',
-    to: 'zh',
+    to: 'sdfsdfsd',
     appid,
     salt,
     sign: md5(appid + words + salt + secret)
@@ -25,16 +36,18 @@ export const translate = (words) => {
   const request = https.request(options, (response) => {
     let chunks = [];
     response.on('data', (chunk) => {
-      chunks.push(chunk)
+      chunks.push(chunk);
       // console.log(`响应主体: ${JSON.parse(chunk)}`);
     });
-    type BaiduResult = {
-
-    }
     response.on('end', () => {
       const string = Buffer.concat(chunks).toString();
-      const obj = JSON.parse(string);
-      console.log('结果',obj);
+      const obj: BaiduResult = JSON.parse(string);
+      if (obj.error_code) {
+        console.log('【错误】 错误码 ' + obj.error_code + ' ' + obj.error_msg);
+        process.exit();
+      } else {
+        console.log('【翻译结果】', obj.trans_result.map(item => item.dst).join(','));
+      }
     });
   });
 
