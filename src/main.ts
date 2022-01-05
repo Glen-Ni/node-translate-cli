@@ -17,7 +17,7 @@ type ErrorMap = {
   [key: string]: string;
 }
 
-const appid = 20220103001045482;
+const appid = '20220103001045482';
 
 const ERROR_MAP:ErrorMap = {
   52000: '成功',
@@ -56,8 +56,6 @@ export const translate = async (words: string) => {
     salt,
     sign: res.data
   });
-
-  console.log('query', query);
 
   const options = {
     hostname: 'fanyi-api.baidu.com',
