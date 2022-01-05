@@ -1,9 +1,6 @@
 import * as querystring from "querystring";
-import * as md5 from "md5";
 import * as https from "https";
-import {appid, secret} from "../privacy";
 import * as http from "http";
-import * as buffer from "buffer";
 
 type BaiduResult = {
   error_code?: string;
@@ -16,8 +13,13 @@ type BaiduResult = {
   }[]
 }
 
+type ErrorMap = {
+  [key: string]: string;
+}
 
-const ERROR_MAP = {
+const appid = 20220103001045482;
+
+const ERROR_MAP:ErrorMap = {
   52000: '成功',
   52001: '请求超时',
   52002: '系统错误',
@@ -45,7 +47,7 @@ export const translate = async (words: string) => {
     to = 'en';
   }
 
-  const res = await getSign<{ data: string }>(words, salt) as { data: string };
+  const res = await getSign(words, salt) as { data: string };
   const query = querystring.stringify({
     q: words,
     from,
@@ -74,7 +76,6 @@ export const translate = async (words: string) => {
       const string = Buffer.concat(chunks).toString();
       const obj: BaiduResult = JSON.parse(string);
       if (obj.error_code) {
-        // @ts-ignore
         console.log('【错误】 ' + obj.error_code + ' ' + ERROR_MAP[obj.error_code] + ' ' + obj.error_msg);
         process.exit();
       } else {
@@ -91,7 +92,7 @@ export const translate = async (words: string) => {
   request.end();
 };
 
-function getSign<F>(q:string, salt: number) {
+function getSign(q: string, salt: number) {
   const query = querystring.stringify({
     q,
     salt,
@@ -109,7 +110,7 @@ function getSign<F>(q:string, salt: number) {
       });
       response.on('end', () => {
         const string = Buffer.concat(chunks).toString();
-        const obj: F = JSON.parse(string);
+        const obj = JSON.parse(string);
         resolve(obj);
       });
     });
