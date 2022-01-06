@@ -1,6 +1,6 @@
 {
   "name": "translate-cli",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "main": "dist/main.js",
   "description": "中英互译命令行小工具，百度翻译API",
   "license": "MIT",
